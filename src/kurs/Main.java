@@ -34,9 +34,8 @@ public class Main {
 
     private static HashMap<String, Integer> mapCounted(String[] words) {
         HashMap<String, Integer> map = new HashMap<>();
-        for (String word: words) {
-            map.put(word, 1 + (map.getOrDefault(word, 0)));
-        }
+        for (String word: words)
+            map.put(word, 1 + map.getOrDefault(word, 0));
         return map;
     }
 
