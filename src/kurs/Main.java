@@ -24,7 +24,7 @@ public class Main {
 
     private static String analysis(String text, int max_amount) {
         JSONObject jsonObject = new JSONObject();
-        for (Map.Entry<String, Integer> entry: mapCounted(clearText(text).split(" ")).entrySet()) {
+        for (Map.Entry<String, Integer> entry: mapCounted(text).entrySet()) {
             int amount = entry.getValue();
             if (amount >= max_amount)
                 jsonObject.put(entry.getKey(), amount);
@@ -32,26 +32,17 @@ public class Main {
         return jsonObject.toString();
     }
 
-    private static HashMap<String, Integer> mapCounted(String[] words) {
+    private static HashMap<String, Integer> mapCounted(String text) {
+        String[] words = text
+                .toLowerCase()
+                .trim()
+                .replaceAll("\\s{2,}", " ")
+                .replaceAll("(?U)[^\\p{L}\\p{N}\\s]+", "")
+                .split(" ");
         HashMap<String, Integer> map = new HashMap<>();
         for (String word: words)
             map.put(word, 1 + map.getOrDefault(word, 0));
         return map;
-    }
-
-    private static String clearText(String text) {
-        String inText = text.toLowerCase();
-        StringBuilder inBuilder = new StringBuilder();
-        String legalChars = " abcdefghijklmnopqrstuvwxyzабвгдеёжзийклмнопрстуфхцчшщъыьэюя";
-        for (int i = 0; i < inText.length(); i++) {
-            char c = inText.charAt(i);
-            if (legalChars.indexOf(c) == -1) continue;
-            //убираем случаи, когда вместо пробела одного пришло несколько
-            //иначе у нас будут после split слова пустые в массиве еще
-            if (c == ' ' && inBuilder.length() > 0 && inBuilder.charAt(inBuilder.length() - 1) == ' ') continue;
-            inBuilder.append(c);
-        }
-        return inBuilder.toString();
     }
 
     private static String[] splitWords(String[] words) {
